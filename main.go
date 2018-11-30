@@ -1,10 +1,16 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/fatih/color"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/tja/postfix-web/pkg/backend"
 )
 
 // Main entry point
@@ -19,7 +25,7 @@ func main() {
 	color.HiCyan("|__|                                                            ")
 	color.HiCyan("                                                                ")
 
-	// Cobra command flags
+	// Cobra command
 	cmd := &cobra.Command{
 		Use:     "postfix-web",
 		Long:    "Web interface for PostFix mail server.",
@@ -30,6 +36,10 @@ func main() {
 
 	cmd.Flags().BoolP("verbose", "v", false, "Show more progress information")
 	cmd.Flags().BoolP("quiet", "q", false, "Show less progress information")
+
+	cmd.Flags().StringP("bind", "b", "127.0.0.1", "Interface to which the server will bind")
+	cmd.Flags().IntP("port", "p", 2105, "Port on which the server will listen")
+	cmd.Flags().StringP("content", "c", "./web", "Path of folder with static content")
 
 	// Viper config
 	viper.BindPFlags(cmd.Flags())
@@ -54,4 +64,20 @@ func run(cmd *cobra.Command, args []string) {
 	default:
 		logrus.SetLevel(logrus.InfoLevel)
 	}
+
+	// Set up server
+	server, err := backend.NewServer(viper.GetString("content"))
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
+	// Start listening
+	httpServer := &http.Server{
+		Handler:      server.Router,
+		Addr:         fmt.Sprintf("%s:%d", viper.GetString("bind"), viper.GetInt("port")),
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+	}
+
+	logrus.Fatal(httpServer.ListenAndServe())
 }
