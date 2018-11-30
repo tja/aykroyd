@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PostFix Dashboard</title>
+    <link rel="stylesheet" href="/css/bulma-0.7.2.min.css">
+    <script defer src="/js/vue-2.5.17.min.js"></script>
+    <script defer src="/js/fontawesome-5.5.0.min.js"></script>
+    <script defer src="/js/postfix-web-0.0.1.js"></script>
+  </head>
+  <body class="">
+    <!-- Navigation -->
+
+    <!-- Hero -->
+    <section class="hero is-success is-bold">
+      <div class="hero-body">
+        <div class="container">
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <div>
+                  <h1 class="title is-1 is-spaced">Email Setup</h1>
+                  <h2 class="subtitle is-3">Manage all your email forwards</h2>
+                </div>
+              </div>
+            </div>
+            <div class="level-right">
+              <figure class="level-item image" style="width:128px;height:128px">
+                <img src="/images/hero.svg">
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content -->
+    <section class="section" >
+      <div class="container">
+
+        <div class="level">
+          <div class="level-item">
+            <div id="email-list-app">
+              <p>{{ foo }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="level">
+          <div class="level-item">
+            <a class="button is-danger is-large" href="/order/">
+              Button
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </body>
+</html>
