@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PostFix Dashboard</title>
+    <title>Email Dashboard</title>
     <link rel="stylesheet" href="/css/bulma-0.7.2.min.css">
     <script defer src="/js/vue-2.5.17.min.js"></script>
     <script defer src="/js/fontawesome-5.5.0.min.js"></script>
@@ -13,7 +13,7 @@
     <!-- Navigation -->
 
     <!-- Hero -->
-    <section class="hero is-success is-bold">
+    <section class="hero is-warning is-bold">
       <div class="hero-body">
         <div class="container">
           <div class="level">
@@ -36,26 +36,102 @@
     </section>
 
     <!-- Content -->
-    <section class="section" >
-      <div class="container">
+    <div id="email-app">
+      <section class="section" v-for="domain in domains">
+        <div class="container">
+          <h2 class="title is-2">{{ domain.name }}</h2>
 
-        <div class="level">
-          <div class="level-item">
-            <div id="email-list-app">
-              <p>{{ foo }}</p>
+          <!-- Existing Email Forwards -->
+          <div class="columns" v-for="email in domain.emails">
+
+            <!-- From Email Address -->
+            <div class="column is-5">
+              <div class="field has-addons">
+                <p class="control"><a class="button is-medium is-static">From</a></p>
+                <p class="control has-icons-left is-expanded">
+                  <input class="input is-medium" type="email" placeholder="Email" v-model="email.from">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div class="level">
-          <div class="level-item">
-            <a class="button is-danger is-large" href="/order/">
-              Button
-            </a>
-          </div>
-        </div>
+            <!-- From Email Address -->
+            <div class="column is-5">
+              <div class="field has-addons">
+                <p class="control"><a class="button is-medium is-static">To</a></p>
+                <p class="control has-icons-left is-expanded">
+                  <input class="input is-medium" type="email" placeholder="Email" v-model="email.to">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </p>
+              </div>
+            </div>
 
-      </div>
-    </section>
+            <!-- Update -->
+            <div class="column is-1">
+              <button class="button is-info is-medium is-fullwidth">
+                <span class="icon is-small">
+                  <i class="fas fa-pen"></i>
+                </span>
+              </button>
+            </div>
+
+            <!-- Delete -->
+            <div class="column is-1">
+              <button class="button is-danger is-medium is-fullwidth">
+                <span class="icon is-small">
+                  <i class="fas fa-trash"></i>
+                </span>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- New Email Forward -->
+          <div class="columns">
+
+            <!-- From Email Address -->
+            <div class="column is-5">
+              <div class="field has-addons">
+                <p class="control"><a class="button is-medium is-static">From</a></p>
+                <p class="control has-icons-left is-expanded">
+                  <input class="input is-medium" type="email" placeholder="Email" v-model="domain.create.from">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <!-- From Email Address -->
+            <div class="column is-5">
+              <div class="field has-addons">
+                <p class="control"><a class="button is-medium is-static">To</a></p>
+                <p class="control has-icons-left is-expanded">
+                  <input class="input is-medium" type="email" placeholder="Email" v-model="domain.create.to">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <!-- Create -->
+            <div class="column is-2">
+              <button class="button is-success is-medium is-fullwidth">
+                <span class="icon is-small">
+                  <i class="fas fa-plus"></i>
+                </span>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+    </div>
   </body>
 </html>

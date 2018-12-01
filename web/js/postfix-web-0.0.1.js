@@ -1,5 +1,5 @@
 var emailListApp = new Vue({
-  el: '#email-list-app',
+  el: '#email-app',
   data: {
     // All data
     foo: 'bar'
