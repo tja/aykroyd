@@ -43,14 +43,14 @@
           <h2 class="title is-2">{{ domain.name }}</h2>
 
           <!-- Existing Email Forwards -->
-          <div class="columns" v-for="email in domain.emails">
+          <div class="columns" v-for="forward in domain.forwards">
 
             <!-- From Email Address -->
             <div class="column is-5">
               <div class="field has-addons">
                 <p class="control"><a class="button is-medium is-static">From</a></p>
                 <p class="control has-icons-left is-expanded">
-                  <input class="input is-medium" type="email" placeholder="Email" v-model="email.from">
+                  <input class="input is-medium" type="email" placeholder="Email" v-model="forward.from">
                   <span class="icon is-small is-left">
                     <i class="fas fa-envelope"></i>
                   </span>
@@ -63,7 +63,7 @@
               <div class="field has-addons">
                 <p class="control"><a class="button is-medium is-static">To</a></p>
                 <p class="control has-icons-left is-expanded">
-                  <input class="input is-medium" type="email" placeholder="Email" v-model="email.to">
+                  <input class="input is-medium" type="email" placeholder="Email" v-model="forward.to">
                   <span class="icon is-small is-left">
                     <i class="fas fa-envelope"></i>
                   </span>

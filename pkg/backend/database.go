@@ -27,14 +27,14 @@ func (m *Database) Close() {
 	m.DB.Close()
 }
 
-type EmailForward struct {
+type Forward struct {
 	From string `json:"from"`
 	To   string `json:"to"`
 }
 
 type Domain struct {
-	Name   string          `json:"name"`
-	Emails []*EmailForward `json:"emails"`
+	Name     string     `json:"name"`
+	Forwards []*Forward `json:"forwards"`
 }
 
 func (m *Database) Domains() []*Domain {
