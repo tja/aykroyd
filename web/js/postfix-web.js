@@ -4,10 +4,27 @@ var emailListApp = new Vue({
     // All data
     domains: []
   },
-  mounted() {
-    // TODO: Get initial setting
+  mounted: function() {
+    // Initial load
+    this.update()
   },
   methods: {
-    // TODO: Manipulate data
+    update: function() {
+      var app = this
+
+      // Fetch from server
+      axios
+        .get('/api/domains/')
+        .then(function (response) { app.domains = decorateDomains(response.data) })
+        .catch(function (error) { console.log(error) })
+    }
   }
 });
+
+function decorateDomains(domains) {
+  for (var i = 0; i < domains.length; i++) {
+    domains[i]['create'] = { from: '', to: '' }
+  }
+
+  return domains
+}
