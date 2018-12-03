@@ -23,7 +23,10 @@ var emailListApp = new Vue({
 
 function decorateDomains(domains) {
   for (var i = 0; i < domains.length; i++) {
-    domains[i]['create'] = { from: '', to: '' }
+    domains[i]['create'] = {
+      from: '@' + domains[i].name,
+      to:   ''
+    }
   }
 
   return domains
