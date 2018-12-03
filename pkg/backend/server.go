@@ -10,6 +10,7 @@ import (
 // ...
 type Server struct {
 	Router *mux.Router
+	DB     *Database
 }
 
 // ...
@@ -17,17 +18,37 @@ func NewServer(staticPath string) (*Server, error) {
 	// Set up router
 	router := mux.NewRouter()
 
-	m := &Server{
-		Router: router,
+	// Set up domains
+	db, err := NewDatabase()
+	if err != nil {
+		return nil, err
 	}
 
-	// Set up API endpoints
+	// Set up server
+	m := &Server{
+		Router: router,
+		DB:     db,
+	}
+
+	// API endpoints
+	router.Methods(http.MethodGet).Path("/api/domains/").HandlerFunc(m.handleDomainsAll())
+
+	// Debug endpoints
 	router.Methods(http.MethodGet).Path("/debug/health/").HandlerFunc(m.handleDebugHealth())
 
 	// Static catch-all
 	router.Methods(http.MethodGet).PathPrefix("/").Handler(http.FileServer(http.Dir(staticPath)))
 
 	return m, nil
+}
+
+// ...
+func (m *Server) handleDomainsAll() http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		// Write response
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(m.DB.Domains())
+	}
 }
 
 // ...
