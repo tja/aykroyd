@@ -38,5 +38,28 @@ type Domain struct {
 }
 
 func (m *Database) Domains() []*Domain {
-	return []*Domain{}
+	// Fetch data
+	resp := []*models.Domain{}
+	if err := m.DB.Preload("Forwards").Find(&resp).Error; err != nil {
+		return []*Domain{}
+	}
+
+	// Convert
+	domains := make([]*Domain, 0, len(resp))
+	for _, r := range resp {
+		forwards := make([]*Forward, 0, len(r.Forwards))
+		for _, f := range r.Forwards {
+			forwards = append(forwards, &Forward{
+				From: f.From,
+				To:   f.To,
+			})
+		}
+
+		domains = append(domains, &Domain{
+			Name:     r.Name,
+			Forwards: forwards,
+		})
+	}
+
+	return domains
 }
