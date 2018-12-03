@@ -2,7 +2,7 @@ var emailListApp = new Vue({
   el: '#email-app',
   data: {
     // All data
-    foo: 'bar'
+    domains: []
   },
   mounted() {
     // TODO: Get initial setting
