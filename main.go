@@ -41,6 +41,8 @@ func main() {
 	cmd.Flags().IntP("port", "p", 2105, "Port on which the server will listen")
 	cmd.Flags().StringP("content", "c", "./web", "Path of folder with static content")
 
+	cmd.Flags().StringP("database", "d", "", "Database connection string")
+
 	// Viper config
 	viper.BindPFlags(cmd.Flags())
 
@@ -66,10 +68,16 @@ func run(cmd *cobra.Command, args []string) {
 	}
 
 	// Set up server
-	server, err := backend.NewServer(viper.GetString("content"))
+	server, err := backend.NewServer(
+		viper.GetString("content"),
+		viper.GetString("database"),
+	)
+
 	if err != nil {
 		logrus.Fatal(err)
 	}
+
+	defer server.Close()
 
 	// Start listening
 	httpServer := &http.Server{

@@ -14,12 +14,12 @@ type Server struct {
 }
 
 // ...
-func NewServer(staticPath string) (*Server, error) {
+func NewServer(staticPath string, connection string) (*Server, error) {
 	// Set up router
 	router := mux.NewRouter()
 
 	// Set up domains
-	db, err := NewDatabase()
+	db, err := NewDatabase(connection)
 	if err != nil {
 		return nil, err
 	}
@@ -40,6 +40,10 @@ func NewServer(staticPath string) (*Server, error) {
 	router.Methods(http.MethodGet).PathPrefix("/").Handler(http.FileServer(http.Dir(staticPath)))
 
 	return m, nil
+}
+
+func (m *Server) Close() {
+	m.DB.Close()
 }
 
 // ...
