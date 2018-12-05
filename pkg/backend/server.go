@@ -35,6 +35,7 @@ func NewServer(staticPath string, connection string) (*Server, error) {
 	router.Methods(http.MethodPost).Path("/api/domains/").HandlerFunc(m.handleDomainsCreateDomain())
 
 	router.Methods(http.MethodPost).Path("/api/domains/{domain}/forwards/").HandlerFunc(m.handleDomainsCreateForward())
+	router.Methods(http.MethodPut).Path("/api/domains/{domain}/forwards/{from}/").HandlerFunc(m.handleDomainsChangeForward())
 
 	// Debug endpoints
 	router.Methods(http.MethodGet).Path("/debug/health/").HandlerFunc(m.handleDebugHealth())
@@ -116,6 +117,40 @@ func (m *Server) handleDomainsCreateForward() http.HandlerFunc {
 
 		// Create forward in database
 		err = m.DB.CreateForward(domain, input.From, input.To)
+		if err != nil {
+			// Forward already exists
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		// Write response
+		w.WriteHeader(http.StatusOK)
+	}
+}
+
+// ...
+func (m *Server) handleDomainsChangeForward() http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		// Extract URL variables
+		vars := mux.Vars(req)
+
+		domain := vars["domain"]
+		from := vars["from"]
+
+		// Parse input
+		var input struct {
+			To string `json:"to"`
+		}
+
+		err := json.NewDecoder(req.Body).Decode(&input)
+		if err != nil {
+			// Could not be parsed
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		// Create forward in database
+		err = m.DB.UpdateForward(domain, from, input.To)
 		if err != nil {
 			// Forward already exists
 			w.WriteHeader(http.StatusInternalServerError)

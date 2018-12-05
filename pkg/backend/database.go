@@ -99,3 +99,36 @@ func (m *Database) CreateForward(name string, from string, to string) error {
 		Append(&models.Forward{From: from, To: to}).
 		Error
 }
+
+func (m *Database) UpdateForward(name string, from string, to string) error {
+	// Get domain
+	var domain models.Domain
+
+	err := m.DB.
+		Where(&models.Domain{Name: name}).
+		First(&domain).
+		Error
+
+	if err != nil {
+		return err
+	}
+
+	// Find forward
+	var forward models.Forward
+
+	err = m.DB.
+		Where(&models.Forward{From: from, DomainID: domain.ID}).
+		First(&forward).
+		Error
+
+	if err != nil {
+		return err
+	}
+
+	// Update existing forward
+	return m.DB.
+		LogMode(false).
+		Model(&forward).
+		Update(&models.Forward{To: to}).
+		Error
+}
