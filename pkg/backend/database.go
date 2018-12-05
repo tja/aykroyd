@@ -91,9 +91,11 @@ func (m *Database) CreateForward(name string, from string, to string) error {
 		return err
 	}
 
-	// Store new format
+	// Store new forward
 	return m.DB.
 		LogMode(false).
-		Create(&models.Forward{From: from, To: to, DomainID: domain.ID}).
+		Model(&domain).
+		Association("Forwards").
+		Append(&models.Forward{From: from, To: to}).
 		Error
 }
