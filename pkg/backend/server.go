@@ -32,6 +32,7 @@ func NewServer(staticPath string, connection string) (*Server, error) {
 
 	// API endpoints
 	router.Methods(http.MethodGet).Path("/api/domains/").HandlerFunc(m.handleDomainsListDomains())
+	router.Methods(http.MethodPost).Path("/api/domains/").HandlerFunc(m.handleDomainsCreateDomain())
 
 	// Debug endpoints
 	router.Methods(http.MethodGet).Path("/debug/health/").HandlerFunc(m.handleDebugHealth())
@@ -42,6 +43,7 @@ func NewServer(staticPath string, connection string) (*Server, error) {
 	return m, nil
 }
 
+// ...
 func (m *Server) Close() {
 	m.DB.Close()
 }
@@ -60,6 +62,34 @@ func (m *Server) handleDomainsListDomains() http.HandlerFunc {
 		// Write response
 		w.WriteHeader(http.StatusOK)
 		w.Write(json)
+	}
+}
+
+// ...
+func (m *Server) handleDomainsCreateDomain() http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		// Parse input
+		var input struct {
+			Name string `json:"name"`
+		}
+
+		err := json.NewDecoder(req.Body).Decode(&input)
+		if err != nil {
+			// Could not be parsed
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		// Create domain in database
+		err = m.DB.CreateDomain(input.Name)
+		if err != nil {
+			// Domain already exists
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		// Write response
+		w.WriteHeader(http.StatusOK)
 	}
 }
 

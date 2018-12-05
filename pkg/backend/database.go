@@ -63,3 +63,11 @@ func (m *Database) ListDomains() []*Domain {
 
 	return domains
 }
+
+func (m *Database) CreateDomain(name string) error {
+	// Store new domain
+	return m.DB.
+		LogMode(false).
+		Create(&models.Domain{Name: name}).
+		Error
+}
