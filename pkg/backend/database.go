@@ -71,3 +71,23 @@ func (m *Database) CreateDomain(name string) error {
 		Create(&models.Domain{Name: name}).
 		Error
 }
+
+func (m *Database) CreateForward(name string, from string, to string) error {
+	// Get domain
+	var domain models.Domain
+
+	err := m.DB.
+		Where(&models.Domain{Name: name}).
+		First(&domain).
+		Error
+
+	if err != nil {
+		return err
+	}
+
+	// Store new format
+	return m.DB.
+		LogMode(false).
+		Create(&models.Forward{From: from, To: to, DomainID: domain.ID}).
+		Error
+}
