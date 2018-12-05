@@ -40,7 +40,13 @@ type Domain struct {
 func (m *Database) ListDomains() []*Domain {
 	// Fetch data
 	resp := []*models.Domain{}
-	if err := m.DB.Set("gorm:auto_preload", true).Find(&resp).Error; err != nil {
+
+	err := m.DB.
+		Set("gorm:auto_preload", true).
+		Find(&resp).
+		Error
+
+	if err != nil {
 		return []*Domain{}
 	}
 
