@@ -37,7 +37,7 @@ type Domain struct {
 	Forwards []*Forward `json:"forwards"`
 }
 
-func (m *Database) Domains() []*Domain {
+func (m *Database) ListDomains() []*Domain {
 	// Fetch data
 	resp := []*models.Domain{}
 	if err := m.DB.Set("gorm:auto_preload", true).Find(&resp).Error; err != nil {

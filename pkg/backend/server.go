@@ -31,7 +31,7 @@ func NewServer(staticPath string, connection string) (*Server, error) {
 	}
 
 	// API endpoints
-	router.Methods(http.MethodGet).Path("/api/domains/").HandlerFunc(m.handleDomainsAll())
+	router.Methods(http.MethodGet).Path("/api/domains/").HandlerFunc(m.handleDomainsListDomains())
 
 	// Debug endpoints
 	router.Methods(http.MethodGet).Path("/debug/health/").HandlerFunc(m.handleDebugHealth())
@@ -47,11 +47,19 @@ func (m *Server) Close() {
 }
 
 // ...
-func (m *Server) handleDomainsAll() http.HandlerFunc {
+func (m *Server) handleDomainsListDomains() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		// Get domains as Json
+		json, err := json.Marshal(m.DB.ListDomains())
+		if err != nil {
+			// Unable to generate Json
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
 		// Write response
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(m.DB.Domains())
+		w.Write(json)
 	}
 }
 
