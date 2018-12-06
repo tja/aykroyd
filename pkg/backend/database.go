@@ -78,6 +78,35 @@ func (m *Database) CreateDomain(name string) error {
 		Error
 }
 
+func (m *Database) DeleteDomain(name string) error {
+	// Get domain
+	var domain models.Domain
+
+	err := m.DB.
+		Where(&models.Domain{Name: name}).
+		First(&domain).
+		Error
+
+	if err != nil {
+		return err
+	}
+
+	// Delete all forwards
+	err = m.DB.
+		Where(&models.Forward{DomainID: domain.ID}).
+		Delete(&models.Forward{}).
+		Error
+
+	if err != nil {
+		return err
+	}
+
+	// Delete domain itself
+	return m.DB.
+		Delete(&domain).
+		Error
+}
+
 func (m *Database) CreateForward(name string, from string, to string) error {
 	// Get domain
 	var domain models.Domain

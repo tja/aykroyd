@@ -32,7 +32,9 @@ func NewServer(staticPath string, connection string) (*Server, error) {
 
 	// API endpoints
 	router.Methods(http.MethodGet).Path("/api/domains/").HandlerFunc(m.handleDomainsListDomains())
+
 	router.Methods(http.MethodPost).Path("/api/domains/").HandlerFunc(m.handleDomainsCreateDomain())
+	router.Methods(http.MethodDelete).Path("/api/domains/{domain}/").HandlerFunc(m.handleDomainsDeleteDomain())
 
 	router.Methods(http.MethodPost).Path("/api/domains/{domain}/forwards/").HandlerFunc(m.handleDomainsCreateForward())
 	router.Methods(http.MethodPut).Path("/api/domains/{domain}/forwards/{from}/").HandlerFunc(m.handleDomainsChangeForward())
@@ -87,6 +89,25 @@ func (m *Server) handleDomainsCreateDomain() http.HandlerFunc {
 		err = m.DB.CreateDomain(input.Name)
 		if err != nil {
 			// Domain already exists
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		// Write response
+		w.WriteHeader(http.StatusOK)
+	}
+}
+
+// ...
+func (m *Server) handleDomainsDeleteDomain() http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		// Extract domain
+		domain := mux.Vars(req)["domain"]
+
+		// Create forward in database
+		err := m.DB.DeleteDomain(domain)
+		if err != nil {
+			// Forward already exists
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
