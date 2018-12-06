@@ -130,7 +130,7 @@
 
             <!-- Create -->
             <div class="column is-2">
-              <button class="button is-success is-medium is-fullwidth">
+              <button class="button is-success is-medium is-fullwidth"  v-on:click="createForward(domain, $event)" :disabled="domain.create.to.length == 0">
                 <span class="icon is-small">
                   <i class="fas fa-plus"></i>
                 </span>

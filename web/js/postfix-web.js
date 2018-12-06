@@ -20,6 +20,12 @@ var emailListApp = new Vue({
         .catch(function (error) { console.log(error) })
     },
 
+    // Create new forward
+    createForward: function(domain, event) {
+      // todo
+      console.log("[" + domain.name + "] Create forward from " + domain.create.from + " to " + domain.create.to)
+    },
+
     // Update existing forward
     updateForward: function(domain, forward, event) {
       // todo
