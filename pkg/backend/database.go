@@ -161,3 +161,23 @@ func (m *Database) UpdateForward(name string, from string, to string) error {
 		Update(&models.Forward{To: to}).
 		Error
 }
+
+func (m *Database) DeleteForward(name string, from string) error {
+	// Get domain
+	var domain models.Domain
+
+	err := m.DB.
+		Where(&models.Domain{Name: name}).
+		First(&domain).
+		Error
+
+	if err != nil {
+		return err
+	}
+
+	// Delete forward
+	return m.DB.
+		Where(&models.Forward{From: from, DomainID: domain.ID}).
+		Delete(&models.Forward{}).
+		Error
+}
