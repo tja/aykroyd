@@ -78,7 +78,7 @@
 
                 <!-- Update -->
                 <div class="column is-6">
-                  <button class="button is-info is-medium is-fullwidth">
+                  <button class="button is-info is-medium is-fullwidth" v-on:click="updateForward(domain, forward, $event)" :disabled="forward.to == forward.toOriginal">
                     <span class="icon is-small">
                       <i class="fas fa-pen"></i>
                     </span>
