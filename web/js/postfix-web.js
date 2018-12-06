@@ -24,6 +24,12 @@ var emailListApp = new Vue({
     updateForward: function(domain, forward, event) {
       // todo
       console.log("[" + domain.name + "] Update forward from " + forward.from + " to " + forward.to)
+    },
+
+    // Delete existing forward
+    deleteForward: function(domain, forward, e) {
+      // todo
+      console.log("[" + domain.name + "] Delete forward from " + forward.from)
     }
   }
 });
