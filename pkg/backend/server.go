@@ -46,7 +46,13 @@ func NewServer(assetPath string, mysql string) (*Server, error) {
 	router.Methods(http.MethodDelete).Path("/api/domains/{domain}/forwards/{from}/").HandlerFunc(m.handleDomainsDeleteForward())
 
 	// Static catch-all
-	router.Methods(http.MethodGet).PathPrefix("/").Handler(http.FileServer(assets.HTTP))
+	if assetPath == "" {
+		// Load from embedded filesystem
+		router.Methods(http.MethodGet).PathPrefix("/").Handler(http.FileServer(assets.HTTP))
+	} else {
+		// Load from given path
+		router.Methods(http.MethodGet).PathPrefix("/").Handler(http.FileServer(http.Dir(assetPath)))
+	}
 
 	return m, nil
 }
