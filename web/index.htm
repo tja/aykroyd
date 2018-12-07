@@ -11,9 +11,7 @@
     <script defer src="/js/lodash-4.17.11.min.js"></script>
     <script defer src="/js/postfix-web.js"></script>
   </head>
-  <body class="">
-    <!-- Navigation -->
-
+  <body>
     <!-- Hero -->
     <section class="hero is-warning is-bold">
       <div class="hero-body">
@@ -45,10 +43,10 @@
         <div class="container">
           <h2 class="title is-2">{{ domain.name }}</h2>
 
-          <!-- Existing Email Forwards -->
+          <!-- Existing email forwards -->
           <div class="columns" v-for="forward in domain.forwards">
 
-            <!-- From Email Address -->
+            <!-- From -->
             <div class="column is-5">
               <div class="field has-addons">
                 <p class="control"><a class="button is-medium is-static" style="width:80px">From</a></p>
@@ -61,7 +59,7 @@
               </div>
             </div>
 
-            <!-- From Email Address -->
+            <!-- To -->
             <div class="column is-5">
               <div class="field has-addons">
                 <p class="control"><a class="button is-medium is-static" style="width:80px">To</a></p>
@@ -100,10 +98,10 @@
 
           </div>
 
-          <!-- New Email Forward -->
+          <!-- New email forward -->
           <div class="columns">
 
-            <!-- From Email Address -->
+            <!-- From -->
             <div class="column is-5">
               <div class="field has-addons">
                 <p class="control"><a class="button is-medium is-static" style="width:80px">From</a></p>
@@ -116,7 +114,7 @@
               </div>
             </div>
 
-            <!-- From Email Address -->
+            <!-- To -->
             <div class="column is-5">
               <div class="field has-addons">
                 <p class="control"><a class="button is-medium is-static" style="width:80px">To</a></p>

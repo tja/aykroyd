@@ -13,7 +13,7 @@ import (
 	"github.com/tja/postfix-web/pkg/backend"
 )
 
-// Main entry point
+// main is the main entry point of the app.
 func main() {
 	// Print banner
 	color.NoColor = false
@@ -56,6 +56,7 @@ func main() {
 	cmd.Execute()
 }
 
+// run is called if the CLI interfaces has been satisfied.
 func run(cmd *cobra.Command, args []string) {
 	// Set logging level
 	switch {

@@ -7,13 +7,15 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// ...
+// Server holds the state of a HTTP server. The HTTP server exposes REST methods to manipulate domains and
+// their associated (email) forwards.
 type Server struct {
 	Router *mux.Router
 	DB     *Database
 }
 
-// ...
+// NewServer creates a new server. staticPath points to a folder with all static assets. connection holds the
+// MySQL connection string, which is passed through to the database layer.
 func NewServer(staticPath string, connection string) (*Server, error) {
 	// Set up router
 	router := mux.NewRouter()
@@ -30,7 +32,7 @@ func NewServer(staticPath string, connection string) (*Server, error) {
 		DB:     db,
 	}
 
-	// API endpoints
+	// REST methods
 	router.Methods(http.MethodGet).Path("/api/domains/").HandlerFunc(m.handleDomainsListDomains())
 
 	router.Methods(http.MethodPost).Path("/api/domains/").HandlerFunc(m.handleDomainsCreateDomain())
@@ -46,12 +48,13 @@ func NewServer(staticPath string, connection string) (*Server, error) {
 	return m, nil
 }
 
-// ...
+// Close closes the server.
 func (m *Server) Close() error {
 	return m.DB.Close()
 }
 
-// ...
+// handleDomainsListDomains returns a function that handles incoming REST requests asking for the list of all
+// domains and associated forwards.
 func (m *Server) handleDomainsListDomains() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		// Get domains
@@ -70,13 +73,14 @@ func (m *Server) handleDomainsListDomains() http.HandlerFunc {
 			return
 		}
 
-		// Write response
+		// Write success response
 		w.WriteHeader(http.StatusOK)
 		w.Write(json)
 	}
 }
 
-// ...
+// handleDomainsCreateDomain returns a function that handles incoming REST requests asking to create a new
+// domain.
 func (m *Server) handleDomainsCreateDomain() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		// Parse input
@@ -99,15 +103,16 @@ func (m *Server) handleDomainsCreateDomain() http.HandlerFunc {
 			return
 		}
 
-		// Write response
+		// Write success response
 		w.WriteHeader(http.StatusOK)
 	}
 }
 
-// ...
+// handleDomainsDeleteDomain returns a function that handles incoming REST requests asking to delete an
+// existing domain. All associated forwards are deleted as well.
 func (m *Server) handleDomainsDeleteDomain() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		// Extract domain
+		// Extract URI variables
 		domain := mux.Vars(req)["domain"]
 
 		// Create forward in database
@@ -118,15 +123,16 @@ func (m *Server) handleDomainsDeleteDomain() http.HandlerFunc {
 			return
 		}
 
-		// Write response
+		// Write success response
 		w.WriteHeader(http.StatusOK)
 	}
 }
 
-// ...
+// handleDomainsCreateForward returns a function that handles incoming REST requests asking to create a new
+// forward for an existing domain.
 func (m *Server) handleDomainsCreateForward() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		// Extract domain
+		// Extract URI variables
 		domain := mux.Vars(req)["domain"]
 
 		// Parse input
@@ -150,15 +156,16 @@ func (m *Server) handleDomainsCreateForward() http.HandlerFunc {
 			return
 		}
 
-		// Write response
+		// Write success response
 		w.WriteHeader(http.StatusOK)
 	}
 }
 
-// ...
+// handleDomainsUpdateForward returns a function that handles incoming REST requests asking to update an
+// existing forward of an existing domain.
 func (m *Server) handleDomainsUpdateForward() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		// Extract URL variables
+		// Extract URI variables
 		vars := mux.Vars(req)
 
 		domain := vars["domain"]
@@ -184,15 +191,16 @@ func (m *Server) handleDomainsUpdateForward() http.HandlerFunc {
 			return
 		}
 
-		// Write response
+		// Write success response
 		w.WriteHeader(http.StatusOK)
 	}
 }
 
-// ...
+// handleDomainsDeleteForward returns a function that handles incoming REST requests asking to delete an
+// existing forward of an existing domain.
 func (m *Server) handleDomainsDeleteForward() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		// Extract URL variables
+		// Extract URI variables
 		vars := mux.Vars(req)
 
 		domain := vars["domain"]
@@ -206,7 +214,7 @@ func (m *Server) handleDomainsDeleteForward() http.HandlerFunc {
 			return
 		}
 
-		// Write response
+		// Write success response
 		w.WriteHeader(http.StatusOK)
 	}
 }
