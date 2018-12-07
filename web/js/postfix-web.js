@@ -50,8 +50,13 @@ var emailListApp = new Vue({
 
     // Update existing forward
     updateForward: function(domain, forward, event) {
-      // todo
-      console.log("[" + domain.name + "] Update forward from " + forward.from + " to " + forward.to)
+      var app = this
+
+      // Send to server
+      axios
+        .put('/api/domains/' + domain.name + '/forwards/' + forward.from + '/', { to: forward.to } )
+        .then(function (response) { app.update() })
+        .catch(function (error) { console.log(error) })
     },
 
     // Delete existing forward
