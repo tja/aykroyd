@@ -37,7 +37,7 @@ func NewServer(staticPath string, connection string) (*Server, error) {
 	router.Methods(http.MethodDelete).Path("/api/domains/{domain}/").HandlerFunc(m.handleDomainsDeleteDomain())
 
 	router.Methods(http.MethodPost).Path("/api/domains/{domain}/forwards/").HandlerFunc(m.handleDomainsCreateForward())
-	router.Methods(http.MethodPut).Path("/api/domains/{domain}/forwards/{from}/").HandlerFunc(m.handleDomainsChangeForward())
+	router.Methods(http.MethodPut).Path("/api/domains/{domain}/forwards/{from}/").HandlerFunc(m.handleDomainsUpdateForward())
 	router.Methods(http.MethodDelete).Path("/api/domains/{domain}/forwards/{from}/").HandlerFunc(m.handleDomainsDeleteForward())
 
 	// Static catch-all
@@ -156,7 +156,7 @@ func (m *Server) handleDomainsCreateForward() http.HandlerFunc {
 }
 
 // ...
-func (m *Server) handleDomainsChangeForward() http.HandlerFunc {
+func (m *Server) handleDomainsUpdateForward() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		// Extract URL variables
 		vars := mux.Vars(req)
