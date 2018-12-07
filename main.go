@@ -41,9 +41,9 @@ func main() {
 
 	cmd.Flags().StringP("bind", "b", "127.0.0.1", "Interface to which the server will bind")
 	cmd.Flags().IntP("port", "p", 2105, "Port on which the server will listen")
-	cmd.Flags().StringP("content", "c", "./web", "Path of folder with static content")
+	cmd.Flags().StringP("assets", "a", "", "Path to static web assets")
 
-	cmd.Flags().StringP("database", "d", "", "Database connection string")
+	cmd.Flags().StringP("mysql", "m", "", "MySQL connection string")
 
 	// Viper config
 	viper.BindPFlags(cmd.Flags())
@@ -72,8 +72,8 @@ func run(cmd *cobra.Command, args []string) {
 
 	// Set up server
 	server, err := backend.NewServer(
-		viper.GetString("content"),
-		viper.GetString("database"),
+		viper.GetString("assets"),
+		viper.GetString("mysql"),
 	)
 
 	if err != nil {

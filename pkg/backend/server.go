@@ -16,14 +16,15 @@ type Server struct {
 	DB     *Database
 }
 
-// NewServer creates a new server. staticPath points to a folder with all static assets. connection holds the
-// MySQL connection string, which is passed through to the database layer.
-func NewServer(staticPath string, connection string) (*Server, error) {
+// NewServer creates a new server. assetPath points to a folder with static web content. If assetPath is empty,
+// the web content is loaded from the embedded filesystem. mysql holds the MySQL connection string, which is
+// passed through to the database layer.
+func NewServer(assetPath string, mysql string) (*Server, error) {
 	// Set up router
 	router := mux.NewRouter()
 
 	// Set up domains
-	db, err := NewDatabase(connection)
+	db, err := NewDatabase(mysql)
 	if err != nil {
 		return nil, err
 	}
