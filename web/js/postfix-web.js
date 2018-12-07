@@ -56,8 +56,13 @@ var emailListApp = new Vue({
 
     // Delete existing forward
     deleteForward: function(domain, forward, e) {
-      // todo
-      console.log("[" + domain.name + "] Delete forward from " + forward.from)
+      var app = this
+
+      // Send to server
+      axios
+        .delete('/api/domains/' + domain.name + '/forwards/' + forward.from + '/')
+        .then(function (response) { app.update() })
+        .catch(function (error) { console.log(error) })
     }
   }
 });
