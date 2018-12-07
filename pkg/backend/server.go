@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+
+	"github.com/tja/postfix-web/pkg/assets"
 )
 
 // Server holds the state of a HTTP server. The HTTP server exposes REST methods to manipulate domains and
@@ -43,7 +45,7 @@ func NewServer(staticPath string, connection string) (*Server, error) {
 	router.Methods(http.MethodDelete).Path("/api/domains/{domain}/forwards/{from}/").HandlerFunc(m.handleDomainsDeleteForward())
 
 	// Static catch-all
-	router.Methods(http.MethodGet).PathPrefix("/").Handler(http.FileServer(http.Dir(staticPath)))
+	router.Methods(http.MethodGet).PathPrefix("/").Handler(http.FileServer(assets.HTTP))
 
 	return m, nil
 }

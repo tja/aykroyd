@@ -1,0 +1,10 @@
+pkg: "assets"             # Package is called 'assets'
+dest: "pkg/assets/"       # Generated files go to './pkg/assets/'
+fmt: true                 # Format source with 'gofmt'
+
+output: "static.go"       # Name of the file to be generated
+noprefix: true            # Don't prefix the output file with an 'a'
+
+custom:
+  - files: [ "web/" ]     # Embed all files from the './web/' folder
+    base: "web/"          # Bit remove 'web/' from the pathname

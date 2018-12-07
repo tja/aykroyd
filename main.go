@@ -1,3 +1,5 @@
+//go:generate go run github.com/UnnoTed/fileb0x ./pkg/assets/config.yaml
+
 package main
 
 import (
