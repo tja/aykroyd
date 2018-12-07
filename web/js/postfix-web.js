@@ -39,8 +39,13 @@ var emailListApp = new Vue({
 
     // Create new forward
     createForward: function(domain, event) {
-      // todo
-      console.log("[" + domain.name + "] Create forward from " + domain.create.from + " to " + domain.create.to)
+      var app = this
+
+      // Send to server
+      axios
+        .post('/api/domains/' + domain.name + '/forwards/', domain.create)
+        .then(function (response) { app.update() })
+        .catch(function (error) { console.log(error) })
     },
 
     // Update existing forward
