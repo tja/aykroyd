@@ -20,6 +20,23 @@ var emailListApp = new Vue({
         .catch(function (error) { console.log(error) })
     },
 
+    // Check if new forwaerd is valid
+    isNewForwardValid: function(domain) {
+      // Invalid if 'from' or 'to' are empty
+      if (domain.create.from.length == 0) { return false }
+      if (domain.create.to.length   == 0) { return false }
+
+      // Invalid if 'from' doesn't end in domain
+      var postfix = '@' + domain.name
+      if (!_.endsWith(domain.create.from, postfix)) { return false }
+
+      // Invalid if 'from; already exists
+      var predicate = [ 'from', domain.create.from ]
+      if (_.some(domain.forwards, predicate)) { return false }
+
+      return true
+    },
+
     // Create new forward
     createForward: function(domain, event) {
       // todo
