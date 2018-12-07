@@ -37,7 +37,6 @@ func main() {
 	}
 
 	cmd.Flags().BoolP("verbose", "v", false, "Show more progress information")
-	cmd.Flags().BoolP("quiet", "q", false, "Show less progress information")
 
 	cmd.Flags().StringP("bind", "b", "127.0.0.1", "Interface to which the server will bind")
 	cmd.Flags().IntP("port", "p", 2105, "Port on which the server will listen")
@@ -61,12 +60,9 @@ func main() {
 // run is called if the CLI interfaces has been satisfied.
 func run(cmd *cobra.Command, args []string) {
 	// Set logging level
-	switch {
-	case viper.GetBool("verbose"):
+	if viper.GetBool("verbose") {
 		logrus.SetLevel(logrus.DebugLevel)
-	case viper.GetBool("quiet"):
-		logrus.SetLevel(logrus.WarnLevel)
-	default:
+	} else {
 		logrus.SetLevel(logrus.InfoLevel)
 	}
 
@@ -89,6 +85,8 @@ func run(cmd *cobra.Command, args []string) {
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
+
+	logrus.Infof("Listening on %s", httpServer.Addr)
 
 	logrus.Fatal(httpServer.ListenAndServe())
 }

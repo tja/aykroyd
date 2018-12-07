@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 
 	"github.com/tja/postfix-web/pkg/assets"
 )
@@ -48,9 +49,11 @@ func NewServer(assetPath string, mysql string) (*Server, error) {
 	// Static catch-all
 	if assetPath == "" {
 		// Load from embedded filesystem
+		logrus.Debug("Serving embedded assets")
 		router.Methods(http.MethodGet).PathPrefix("/").Handler(http.FileServer(assets.HTTP))
 	} else {
 		// Load from given path
+		logrus.Debugf("Serving assets from path '%s'", assetPath)
 		router.Methods(http.MethodGet).PathPrefix("/").Handler(http.FileServer(http.Dir(assetPath)))
 	}
 
@@ -66,11 +69,15 @@ func (m *Server) Close() error {
 // domains and associated forwards.
 func (m *Server) handleDomainsListDomains() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		logrus.Info("Return domains")
+
 		// Get domains
 		domains, err := m.DB.Domains()
 		if err != nil {
 			// Unable to fetch domains
 			w.WriteHeader(http.StatusInternalServerError)
+
+			logrus.Warn(err)
 			return
 		}
 
@@ -79,12 +86,16 @@ func (m *Server) handleDomainsListDomains() http.HandlerFunc {
 		if err != nil {
 			// Unable to generate Json
 			w.WriteHeader(http.StatusInternalServerError)
+
+			logrus.Warn(err)
 			return
 		}
 
 		// Write success response
 		w.WriteHeader(http.StatusOK)
 		w.Write(json)
+
+		logrus.Debugf("Returned %d domains", len(domains))
 	}
 }
 
@@ -92,6 +103,8 @@ func (m *Server) handleDomainsListDomains() http.HandlerFunc {
 // domain.
 func (m *Server) handleDomainsCreateDomain() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		logrus.Info("Create new domain")
+
 		// Parse input
 		var input struct {
 			Name string `json:"name"`
@@ -101,6 +114,8 @@ func (m *Server) handleDomainsCreateDomain() http.HandlerFunc {
 		if err != nil {
 			// Could not be parsed
 			w.WriteHeader(http.StatusBadRequest)
+
+			logrus.Warn(err)
 			return
 		}
 
@@ -109,11 +124,15 @@ func (m *Server) handleDomainsCreateDomain() http.HandlerFunc {
 		if err != nil {
 			// Domain already exists
 			w.WriteHeader(http.StatusInternalServerError)
+
+			logrus.Warn(err)
 			return
 		}
 
 		// Write success response
 		w.WriteHeader(http.StatusOK)
+
+		logrus.Debugf("Created new domain '%s'", input.Name)
 	}
 }
 
@@ -121,6 +140,8 @@ func (m *Server) handleDomainsCreateDomain() http.HandlerFunc {
 // existing domain. All associated forwards are deleted as well.
 func (m *Server) handleDomainsDeleteDomain() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		logrus.Info("Delete domain")
+
 		// Extract URI variables
 		domain := mux.Vars(req)["domain"]
 
@@ -129,11 +150,15 @@ func (m *Server) handleDomainsDeleteDomain() http.HandlerFunc {
 		if err != nil {
 			// Forward already exists
 			w.WriteHeader(http.StatusInternalServerError)
+
+			logrus.Warn(err)
 			return
 		}
 
 		// Write success response
 		w.WriteHeader(http.StatusOK)
+
+		logrus.Debugf("Deleted domain '%s'", domain)
 	}
 }
 
@@ -141,6 +166,8 @@ func (m *Server) handleDomainsDeleteDomain() http.HandlerFunc {
 // forward for an existing domain.
 func (m *Server) handleDomainsCreateForward() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		logrus.Info("Create email forward")
+
 		// Extract URI variables
 		domain := mux.Vars(req)["domain"]
 
@@ -154,6 +181,8 @@ func (m *Server) handleDomainsCreateForward() http.HandlerFunc {
 		if err != nil {
 			// Could not be parsed
 			w.WriteHeader(http.StatusBadRequest)
+
+			logrus.Warn(err)
 			return
 		}
 
@@ -162,11 +191,15 @@ func (m *Server) handleDomainsCreateForward() http.HandlerFunc {
 		if err != nil {
 			// Forward already exists
 			w.WriteHeader(http.StatusInternalServerError)
+
+			logrus.Warn(err)
 			return
 		}
 
 		// Write success response
 		w.WriteHeader(http.StatusOK)
+
+		logrus.Debugf("Created email forward for domain '%s' from '%s' to '%s'", domain, input.From, input.To)
 	}
 }
 
@@ -174,6 +207,8 @@ func (m *Server) handleDomainsCreateForward() http.HandlerFunc {
 // existing forward of an existing domain.
 func (m *Server) handleDomainsUpdateForward() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		logrus.Info("Update email forward")
+
 		// Extract URI variables
 		vars := mux.Vars(req)
 
@@ -189,6 +224,8 @@ func (m *Server) handleDomainsUpdateForward() http.HandlerFunc {
 		if err != nil {
 			// Could not be parsed
 			w.WriteHeader(http.StatusBadRequest)
+
+			logrus.Warn(err)
 			return
 		}
 
@@ -197,11 +234,15 @@ func (m *Server) handleDomainsUpdateForward() http.HandlerFunc {
 		if err != nil {
 			// Forward already exists
 			w.WriteHeader(http.StatusInternalServerError)
+
+			logrus.Warn(err)
 			return
 		}
 
 		// Write success response
 		w.WriteHeader(http.StatusOK)
+
+		logrus.Debugf("Updated email forward '%s' of domain '%s' to '%s'", from, domain, input.To)
 	}
 }
 
@@ -209,6 +250,8 @@ func (m *Server) handleDomainsUpdateForward() http.HandlerFunc {
 // existing forward of an existing domain.
 func (m *Server) handleDomainsDeleteForward() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		logrus.Info("Delete email forward")
+
 		// Extract URI variables
 		vars := mux.Vars(req)
 
@@ -220,10 +263,14 @@ func (m *Server) handleDomainsDeleteForward() http.HandlerFunc {
 		if err != nil {
 			// Forward already exists
 			w.WriteHeader(http.StatusInternalServerError)
+
+			logrus.Warn(err)
 			return
 		}
 
 		// Write success response
 		w.WriteHeader(http.StatusOK)
+
+		logrus.Debugf("Deleted email forward '%s' of domain '%s'", from, domain)
 	}
 }
