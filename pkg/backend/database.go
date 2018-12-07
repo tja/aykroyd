@@ -37,9 +37,9 @@ func (m *Database) Close() error {
 	return m.DB.Close()
 }
 
-func (m *Database) ListDomains() []*Domain {
+func (m *Database) Domains() ([]*Domain, error) {
 	// Fetch data
-	resp := []*models.Domain{}
+	var resp []*models.Domain
 
 	err := m.DB.
 		Set("gorm:auto_preload", true).
@@ -47,13 +47,15 @@ func (m *Database) ListDomains() []*Domain {
 		Error
 
 	if err != nil {
-		return []*Domain{}
+		return nil, err
 	}
 
 	// Convert
 	domains := make([]*Domain, 0, len(resp))
+
 	for _, r := range resp {
 		forwards := make([]*Forward, 0, len(r.Forwards))
+
 		for _, f := range r.Forwards {
 			forwards = append(forwards, &Forward{
 				From: f.From,
@@ -67,7 +69,7 @@ func (m *Database) ListDomains() []*Domain {
 		})
 	}
 
-	return domains
+	return domains, nil
 }
 
 func (m *Database) CreateDomain(name string) error {

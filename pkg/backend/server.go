@@ -54,8 +54,16 @@ func (m *Server) Close() error {
 // ...
 func (m *Server) handleDomainsListDomains() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		// Get domains as Json
-		json, err := json.Marshal(m.DB.ListDomains())
+		// Get domains
+		domains, err := m.DB.Domains()
+		if err != nil {
+			// Unable to fetch domains
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		// Convert to Json
+		json, err := json.Marshal(domains)
 		if err != nil {
 			// Unable to generate Json
 			w.WriteHeader(http.StatusInternalServerError)
