@@ -40,9 +40,6 @@ func NewServer(staticPath string, connection string) (*Server, error) {
 	router.Methods(http.MethodPut).Path("/api/domains/{domain}/forwards/{from}/").HandlerFunc(m.handleDomainsChangeForward())
 	router.Methods(http.MethodDelete).Path("/api/domains/{domain}/forwards/{from}/").HandlerFunc(m.handleDomainsDeleteForward())
 
-	// Debug endpoints
-	router.Methods(http.MethodGet).Path("/debug/health/").HandlerFunc(m.handleDebugHealth())
-
 	// Static catch-all
 	router.Methods(http.MethodGet).PathPrefix("/").Handler(http.FileServer(http.Dir(staticPath)))
 
@@ -203,19 +200,5 @@ func (m *Server) handleDomainsDeleteForward() http.HandlerFunc {
 
 		// Write response
 		w.WriteHeader(http.StatusOK)
-	}
-}
-
-// ...
-func (m *Server) handleDebugHealth() http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
-		// ...
-		body := map[string]string{
-			"response": "healthy",
-		}
-
-		// Write response
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(body)
 	}
 }
