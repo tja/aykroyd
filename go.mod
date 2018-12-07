@@ -1,4 +1,4 @@
-module github.com/tja/postfix-web
+module github.com/tja/aykroyd
 
 require (
 	github.com/UnnoTed/fileb0x v1.1.1 // indirect

@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/tja/postfix-web/pkg/backend"
+	"github.com/tja/aykroyd/pkg/backend"
 )
 
 // main is the main entry point of the app.
@@ -20,20 +20,20 @@ func main() {
 	// Print banner
 	color.NoColor = false
 
-	color.HiCyan("                   __    ___ __                           __    ")
-	color.HiCyan(".-----.-----.-----|  |_.'  _|__|--.--._____.--._.--.-----|  |--.")
-	color.HiCyan("|  -  |  -  |__ --|   _|   _|  |-   -|_____|  | |  |  -__|  -  |")
-	color.HiCyan("|   __|_____|_____|____|__| |__|__.__|     |___.___|_____|_____|")
-	color.HiCyan("|__|                                                            ")
-	color.HiCyan("                                                                ")
+	color.HiCyan("             __                        __ ")
+	color.HiCyan(".---.-.--.--|  |--.-.--.-----.--.--.--|  |")
+	color.HiCyan("|  -  |  |  |    <|  .-|  -  |  |  |  -  |")
+	color.HiCyan("|___._|___  |__|__|__| |_____|___  |_____|")
+	color.HiCyan("         |__|                   |__|      ")
+	color.HiCyan("                                          ")
 
 	// Cobra command
 	cmd := &cobra.Command{
-		Use:     "postfix-web",
-		Long:    "Web interface for PostFix mail server.",
+		Use:     "aykroyd",
+		Long:    "Email forwards via PostFix.",
 		Args:    cobra.NoArgs,
 		Version: "0.0.1",
-		Run:     run,
+		Run:     aykroyd,
 	}
 
 	cmd.Flags().BoolP("verbose", "v", false, "Show more progress information")
@@ -48,7 +48,7 @@ func main() {
 	viper.BindPFlags(cmd.Flags())
 
 	viper.SetConfigName("config")
-	viper.AddConfigPath("$HOME/.config/postfix-web")
+	viper.AddConfigPath("$HOME/.config/aykroyd")
 	viper.AddConfigPath(".")
 
 	viper.ReadInConfig()
@@ -57,8 +57,8 @@ func main() {
 	cmd.Execute()
 }
 
-// run is called if the CLI interfaces has been satisfied.
-func run(cmd *cobra.Command, args []string) {
+// aykroyd is called if the CLI interfaces has been satisfied.
+func aykroyd(cmd *cobra.Command, args []string) {
 	// Set logging level
 	if viper.GetBool("verbose") {
 		logrus.SetLevel(logrus.DebugLevel)

@@ -7,7 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 
-	"github.com/tja/postfix-web/pkg/assets"
+	"github.com/tja/aykroyd/pkg/assets"
 )
 
 // Server holds the state of a HTTP server. The HTTP server exposes REST methods to manipulate domains and

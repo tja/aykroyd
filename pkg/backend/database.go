@@ -4,7 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
-	"github.com/tja/postfix-web/pkg/models"
+	"github.com/tja/aykroyd/pkg/models"
 )
 
 // Domain is the caller-facing replica of the internal database model. It contains the state of the room domain
