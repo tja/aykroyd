@@ -7,6 +7,16 @@ import (
 	"github.com/tja/postfix-web/pkg/models"
 )
 
+type Domain struct {
+	Name     string     `json:"name"`
+	Forwards []*Forward `json:"forwards"`
+}
+
+type Forward struct {
+	From string `json:"from"`
+	To   string `json:"to"`
+}
+
 type Database struct {
 	DB *gorm.DB
 }
@@ -25,16 +35,6 @@ func NewDatabase(connection string) (*Database, error) {
 
 func (m *Database) Close() {
 	m.DB.Close()
-}
-
-type Forward struct {
-	From string `json:"from"`
-	To   string `json:"to"`
-}
-
-type Domain struct {
-	Name     string     `json:"name"`
-	Forwards []*Forward `json:"forwards"`
 }
 
 func (m *Database) ListDomains() []*Domain {
