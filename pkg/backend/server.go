@@ -50,8 +50,8 @@ func NewServer(staticPath string, connection string) (*Server, error) {
 }
 
 // ...
-func (m *Server) Close() {
-	m.DB.Close()
+func (m *Server) Close() error {
+	return m.DB.Close()
 }
 
 // ...

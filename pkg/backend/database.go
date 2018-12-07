@@ -33,8 +33,8 @@ func NewDatabase(connection string) (*Database, error) {
 	return &Database{DB: db}, nil
 }
 
-func (m *Database) Close() {
-	m.DB.Close()
+func (m *Database) Close() error {
+	return m.DB.Close()
 }
 
 func (m *Database) ListDomains() []*Domain {
