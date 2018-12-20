@@ -2,6 +2,7 @@
 
 <p align="center">
   <a href="https://godoc.org/github.com/tja/aykroyd"><img src="https://godoc.org/github.com/tja/aykroyd?status.svg" alt="GoDoc"></a>
+  <a href="https://goreportcard.com/report/github.com/tja/aykroyd"><img src="https://goreportcard.com/badge/github.com/tja/aykroyd" alt="Go Report Card"></a>
   <a href="http://opensource.org/licenses/MIT"><img src="http://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT License"></a>
 </p>
 
