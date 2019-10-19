@@ -4,6 +4,7 @@ package main
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/fatih/color"
@@ -46,6 +47,10 @@ func main() {
 	cmd.Flags().StringP("db-password", "p", "", "MySQL password")
 
 	// Viper config
+	viper.SetEnvPrefix("AYKROYD")
+	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
+	viper.AutomaticEnv()
+
 	viper.BindPFlags(cmd.Flags())
 
 	viper.SetConfigName("config")
