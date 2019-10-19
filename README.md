@@ -77,7 +77,7 @@ listen on port 80 by default, but this can be changed with the `--listen` comman
 
 ## License
 
-Copyright (c) 2018 Thomas Jansen. Released under the
+Copyright (c) 2018&ndash;2019 Thomas Jansen. Released under the
 [MIT License](https://github.com/tja/aykroyd/blob/master/LICENSE).
 
 Email icon made by [Pixel Buddha](https://www.flaticon.com/authors/pixel-buddha) from
