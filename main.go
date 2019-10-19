@@ -54,6 +54,7 @@ func main() {
 	viper.BindPFlags(cmd.Flags())
 
 	viper.SetConfigName("config")
+	viper.AddConfigPath("/etc/aykroyd")
 	viper.AddConfigPath("$HOME/.config/aykroyd")
 	viper.AddConfigPath(".")
 
