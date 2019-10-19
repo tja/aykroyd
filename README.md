@@ -72,7 +72,8 @@ virtual_alias_maps = mysql:/etc/postfix/mysql_virtual_alias_forwards.cf
 
 ## Usage
 
-Run `aykroyd` in the command line, then visit `http://localhost:2105/` to bring up the web interface.
+Run `aykroyd` in the command line, then visit `http://localhost/` to bring up the web interface. `aykroyd` will
+listen on port 80 by default, but this can be changed with the `--listen` command line option.
 
 ## License
 

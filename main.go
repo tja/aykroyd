@@ -38,7 +38,7 @@ func main() {
 
 	cmd.Flags().BoolP("verbose", "v", false, "Write more")
 
-	cmd.Flags().StringP("listen", "l", "127.0.0.1:2105", "IP and port on which the server will listen")
+	cmd.Flags().StringP("listen", "l", "0.0.0.0:80", "IP and port on which the server will listen")
 	cmd.Flags().StringP("assets", "a", "", "Path to static web assets")
 
 	cmd.Flags().StringP("db-host", "H", "localhost", "MySQL host")
