@@ -3,7 +3,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -36,13 +35,15 @@ func main() {
 		Run:     aykroyd,
 	}
 
-	cmd.Flags().BoolP("verbose", "v", false, "Show more progress information")
+	cmd.Flags().BoolP("verbose", "v", false, "Write more")
 
-	cmd.Flags().StringP("bind", "b", "127.0.0.1", "Interface to which the server will bind")
-	cmd.Flags().IntP("port", "p", 2105, "Port on which the server will listen")
+	cmd.Flags().StringP("listen", "l", "127.0.0.1:2105", "IP and port on which the server will listen")
 	cmd.Flags().StringP("assets", "a", "", "Path to static web assets")
 
-	cmd.Flags().StringP("mysql", "m", "", "MySQL connection string")
+	cmd.Flags().StringP("db-host", "H", "localhost", "MySQL host")
+	cmd.Flags().StringP("db-database", "d", "postfix", "MySQL database")
+	cmd.Flags().StringP("db-username", "u", "postfix", "MySQL username")
+	cmd.Flags().StringP("db-password", "p", "", "MySQL password")
 
 	// Viper config
 	viper.BindPFlags(cmd.Flags())
@@ -69,7 +70,10 @@ func aykroyd(cmd *cobra.Command, args []string) {
 	// Set up server
 	server, err := backend.NewServer(
 		viper.GetString("assets"),
-		viper.GetString("mysql"),
+		viper.GetString("db-host"),
+		viper.GetString("db-database"),
+		viper.GetString("db-username"),
+		viper.GetString("db-password"),
 	)
 
 	if err != nil {
@@ -81,7 +85,7 @@ func aykroyd(cmd *cobra.Command, args []string) {
 	// Start listening
 	httpServer := &http.Server{
 		Handler:      server.Router,
-		Addr:         fmt.Sprintf("%s:%d", viper.GetString("bind"), viper.GetInt("port")),
+		Addr:         viper.GetString("listen"),
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}

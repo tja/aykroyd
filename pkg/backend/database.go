@@ -1,6 +1,8 @@
 package backend
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
@@ -26,11 +28,20 @@ type Database struct {
 	DB *gorm.DB
 }
 
-// NewDatabase creates a new persistant storage instance. connection holds the MySQL connection string, which
-// is passed through to the database layer.
-func NewDatabase(connection string) (*Database, error) {
+// NewDatabase creates a new persistant storage instance. host, database, username, and password hold relevant
+// information to connect to MySQL.
+func NewDatabase(host, database, username, password string) (*Database, error) {
 	// Setup Gorm
-	db, err := gorm.Open("mysql", connection)
+	db, err := gorm.Open(
+		"mysql",
+		fmt.Sprintf("%s:%s@(%s)/%s?charset=utf8&parseTime=True&loc=Local",
+			username,
+			password,
+			host,
+			database,
+		),
+	)
+
 	if err != nil {
 		return nil, err
 	}
