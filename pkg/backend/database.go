@@ -23,12 +23,12 @@ type Forward struct {
 	To   string `json:"to"`
 }
 
-// Database holds the state of the persistant storage.
+// Database holds the state of the persistent storage.
 type Database struct {
 	DB *gorm.DB
 }
 
-// NewDatabase creates a new persistant storage instance. host, database, username, and password hold relevant
+// NewDatabase creates a new persistent storage instance. host, database, username, and password hold relevant
 // information to connect to MySQL.
 func NewDatabase(host, database, username, password string) (*Database, error) {
 	// Setup Gorm
@@ -52,7 +52,7 @@ func NewDatabase(host, database, username, password string) (*Database, error) {
 	return &Database{DB: db}, nil
 }
 
-// Close closes the persistant storage instance.
+// Close closes the persistent storage instance.
 func (m *Database) Close() error {
 	return m.DB.Close()
 }
