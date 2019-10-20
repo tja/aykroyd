@@ -6,12 +6,16 @@
   <a href="http://opensource.org/licenses/MIT"><img src="http://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT License"></a>
 </p>
 
+
 # Aykroyd &mdash; Email forwards via Postfix
 
 **Aykroyd** is an HTTP server and web application that allows the user to manage email forwards in
 [Postfix](http://www.postfix.org).
 
+
 ## Installation
+
+### Binaries
 
 Pre-built binaries are available on the [release page](https://github.com/tja/aykroyd/releases/latest). Simply
 download, make executable, and move it to a folder in your `PATH`:
@@ -22,7 +26,15 @@ chmod +x /tmp/aykroyd
 sudo mv /tmp/aykroyd /usr/local/bin/aykroyd
 ```
 
-### Dependencies
+### Docker
+
+**Aykroyd** is also available as a [Docker image from Docker Hub](https://hub.docker.com/r/neathack/aykroyd).
+Configuration can be done via a config file or environment variables (see below for details).
+
+
+## Setup
+
+### MariaDB / MySQL
 
 Install [MariaDB](https://mariadb.com/downloads/) or [MySQL](https://dev.mysql.com/downloads/), create a
 schema `postfix`, and grant a user access to it:
@@ -31,6 +43,8 @@ schema `postfix`, and grant a user access to it:
 CREATE SCHEMA `postfix`;
 GRANT SELECT ON `postfix`.* TO `postfix`@`localhost` IDENTIFIED BY '<password>';
 ```
+
+### Postfix
 
 Install [Postfix](http://www.postfix.org) with [MySQL support](http://www.postfix.org/MYSQL_README.html). Here
 is an example for Debian/Ubuntu:
@@ -70,10 +84,48 @@ virtual_alias_domains = mysql:/etc/postfix/mysql_virtual_alias_domains.cf
 virtual_alias_maps = mysql:/etc/postfix/mysql_virtual_alias_forwards.cf
 ```
 
+
 ## Usage
 
-Run `aykroyd` in the command line, then visit `http://localhost/` to bring up the web interface. `aykroyd` will
-listen on port 80 by default, but this can be changed with the `--listen` command line option.
+### Binary
+
+Run `aykroyd` in the command line like this:
+
+```bash
+aykroyd --host "0.0.0.0:8080"
+```
+
+Open a browser and visit `http://localhost:8080` to bring up the web interface. See below for how to configure
+host, port, and database access.
+
+### Docker
+
+Run the Docker image `neathack/aykroyd` and proxy port `80` to a port of your choice:
+
+```bash
+docker run -ti --rm -p "8080:80" neathack/aykroyd:latest
+```
+
+Open a browser and visit `http://localhost:8080` to bring up the web interface. See below for how to configure
+database access.
+
+
+## Configuration
+
+**Aykroyd** can be configured via command line switches, a configuration file (in the current folder, in
+`~/.config/aykroyd/config.yml`, or in `/etc/aykroyd/config.yml`), or environment variables. The following
+options are available:
+
+| Command Line          | Config File   | ENV Variable          | Description                                                  |
+|-----------------------|---------------|-----------------------|--------------------------------------------------------------|
+| `-l`, `--listen`      | `listen`      | `AYKROYD_LISTEN`      | IP and port the server will listen on (default "0.0.0.0:80") |
+| `-a`, `--asset`       | `asset`       | `AYKROYD_ASSET`       | Path to static web assets (default uses embedded assets)     |
+| `-H`, `--db-host`     | `db-host`     | `AYKROYD_DB_HOST`     | MySQL host (default "localhost")                             |
+| `-d`, `--db-database` | `db-database` | `AYKROYD_DB_DATABASE` | MySQL database (default "postfix")                           |
+| `-u`, `--db-username` | `db-username` | `AYKROYD_DB_USERNAME` | MySQL username (default "postfix")                           |
+| `-p`, `--db-password` | `db-password` | `AYKROYD_DB_PASSWORD` | MySQL password                                               |
+| `-v`, `--verbose`     | `verbose`     | `AYKROYD_DB_VERBOSE`  | Write more                                                   |
+
 
 ## License
 
