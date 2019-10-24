@@ -23,7 +23,7 @@ RUN go build -ldflags="-s -w" -o aykroyd main.go
 FROM $BASEIMAGE AS prod
 
 LABEL maintainer="thomas@crissyfield.de"
-LABEL version="2.0.0"
+LABEL version="2.0.1"
 LABEL description="Email forwards via Postfix"
 
 RUN apk --no-cache add tzdata
