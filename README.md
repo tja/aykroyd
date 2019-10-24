@@ -73,8 +73,8 @@ password = <password>
 hosts = 127.0.0.1
 dbname = postfix
 table = forwards
-select_field = to
-where_field = from
+select_field = target
+where_field = source
 ```
 
 Append the references to the two aforementioned files to `/etc/postfix/main.cf`:
