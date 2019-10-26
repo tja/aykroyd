@@ -32,7 +32,7 @@ func main() {
 		Use:     "aykroyd",
 		Long:    "Email forwards via PostFix.",
 		Args:    cobra.NoArgs,
-		Version: "2.0.1",
+		Version: "2.1.0",
 		Run:     aykroyd,
 	}
 

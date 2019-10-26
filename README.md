@@ -21,7 +21,7 @@ Pre-built binaries are available on the [release page](https://github.com/tja/ay
 download, make executable, and move it to a folder in your `PATH`:
 
 ```bash
-curl -L https://github.com/tja/aykroyd/releases/download/v2.0.0/aykroyd-`uname -s`-`uname -m` >/tmp/aykroyd
+curl -L https://github.com/tja/aykroyd/releases/download/v2.1.0/aykroyd-`uname -s`-`uname -m` >/tmp/aykroyd
 chmod +x /tmp/aykroyd
 sudo mv /tmp/aykroyd /usr/local/bin/aykroyd
 ```
