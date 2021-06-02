@@ -37,6 +37,8 @@ func NewServer(assetPath, dbHost, dbDatabase, dbUsername, dbPassword string) (*S
 	}
 
 	// REST methods
+	router.Methods(http.MethodGet).Path("/api/health/").HandlerFunc(m.handleHealth())
+
 	router.Methods(http.MethodGet).Path("/api/domains/").HandlerFunc(m.handleDomainsListDomains())
 
 	router.Methods(http.MethodPost).Path("/api/domains/").HandlerFunc(m.handleDomainsCreateDomain())
@@ -63,6 +65,18 @@ func NewServer(assetPath, dbHost, dbDatabase, dbUsername, dbPassword string) (*S
 // Close closes the server.
 func (m *Server) Close() error {
 	return m.DB.Close()
+}
+
+// handleHealth returns a function that handles incoming REST requests and always returns OK.
+func (m *Server) handleHealth() http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		logrus.Info("Return OK")
+
+		// Write success response
+		w.WriteHeader(http.StatusOK)
+
+		logrus.Debug("Returned OK")
+	}
 }
 
 // handleDomainsListDomains returns a function that handles incoming REST requests asking for the list of all
@@ -93,7 +107,7 @@ func (m *Server) handleDomainsListDomains() http.HandlerFunc {
 
 		// Write success response
 		w.WriteHeader(http.StatusOK)
-		w.Write(json)
+		w.Write(json) //nolint
 
 		logrus.Debugf("Returned %d domains", len(domains))
 	}
